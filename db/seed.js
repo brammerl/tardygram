@@ -5,6 +5,7 @@ const Comment = require('../lib/models/Comment');
 const Post = require('../lib/models/Post');
 
 module.exports = async({ users = 12, comments = 50, posts = 200 } = {}) => {
+
   const userArray = await User.create([...Array(users)].map((_, i) => ({
     username: `test${i}@test.com`,
     password: 'password',

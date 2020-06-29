@@ -1,6 +1,6 @@
 const { prepare, agent } = require('../lib/data-helpers/data-helpers');
 
-// const Comment = require('../lib/models/Comment');
+const Comment = require('../lib/models/Comment');
 const Post = require('../lib/models/Post');
 const User = require('../lib/models/User');
 
@@ -25,6 +25,16 @@ describe('Comment routes', () => {
           __v: 0,
           _id: expect.anything()
         });
+      });
+  });
+
+  it('Deletes a comment', async() => {
+    const comment = prepare(await Comment.findOne());
+
+    return agent
+      .delete(`/api/v1/comments/${comment._id}`)
+      .then(res => {
+        expect(res.body).toEqual(comment);
       });
   });
 });

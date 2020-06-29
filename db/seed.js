@@ -5,23 +5,21 @@ const Comment = require('../lib/models/Comment');
 const Post = require('../lib/models/Post');
 
 module.exports = async({ users = 50, comments = 1000, posts = 5000 }) => {
-  const userArray = await Promise.all([...Array(users)].map(async() => {
-    return User.create({
-      username: chance.name(),
-      password: '123'  
-    });
-  }));
+  const userArray = await User.create([...Array(users)].map((_, i) => ({
+    username: `test${i}@test.com`,
+    password: 'password',
+    profileImage: chance.url()
+  })));
 
+  const tags = ['summer', 'winter', 'fall', 'spring', 'skateboarding', 'gaming', 'art', 'pets'];
   const postArray = await Promise.all([...Array(posts)].map(async() => {
-    const numTags = Math.floor(Math.ceil() * 6);
-    const tagsArray = [...Array(numTags)];
+    const numTags = Math.ceil(Math.random() * 6);
+
     return Post.create({
       user: chance.pickone(userArray)._id,
       photoUrl: chance.url(),
       caption: chance.sentence({ words: 4 }),
-      tags: tagsArray.map(() => {
-        return chance.word();
-      })
+      tags: chance.pickset(tags, numTags)
     });
   }));
 

@@ -31,6 +31,7 @@ describe('Comment routes', () => {
   it('Deletes a comment', async() => {
     const comment = prepare(await Comment.findOne());
 
+
     return agent
       .delete(`/api/v1/comments/${comment._id}`)
       .then(res => {

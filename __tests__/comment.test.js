@@ -5,7 +5,7 @@ const app = require('../lib/app');
 
 const Comment = require('../lib/models/Comment');
 
-describe('Comment routes', asunc() => {
+describe('Comment routes', async() => {
 
   it
 })

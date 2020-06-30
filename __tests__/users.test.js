@@ -1,29 +1,11 @@
 require('dotenv').config();
 
-const { MongoMemoryServer } = require('mongodb-memory-server');
-const mongod = new MongoMemoryServer();
-const mongoose = require('mongoose');
-const connect = require('../lib/utils/connect');
-
 const request = require('supertest');
 const app = require('../lib/app');
 const User = require('../lib/models/User');
+require('../lib/data-helpers/data-helpers');
 
 describe('user routes', () => {
-  beforeAll(async() => {
-    const uri = await mongod.getUri();
-    return connect(uri);
-  });
-
-  beforeEach(() => {
-    return mongoose.connection.dropDatabase();
-  });
-
-  afterAll(async() => {
-    await mongoose.connection.close();
-    return mongod.stop();
-  });
-
   it('creates an user via POST', () => {
     return request(app)
       .post('/api/v1/auth/signup')
@@ -82,6 +64,66 @@ describe('user routes', () => {
           _id: user.id,
           username: user.username
         });
+      });
+  });
+
+  it('GETs the top 10 users with the most comments on their posts', async() => {
+    const agent = request.agent(app);
+
+    return agent
+      .get('/api/v1/auth/popular')
+      .then(res => {
+        expect(res.body).toContainEqual({
+          _id: expect.anything(),
+          username: expect.any(String),
+          totalCommentsOnPosts: expect.any(Number)
+        });
+        expect(res.body).toHaveLength(10);
+      });
+  });
+
+  it('GETs the top 10 users with the most posts', async() => {
+    const agent = request.agent(app);
+
+    return agent
+      .get('/api/v1/auth/prolific')
+      .then(res => {
+        expect(res.body).toContainEqual({
+          _id: expect.anything(),
+          username: expect.any(String),
+          totalPosts: expect.any(Number)
+        });
+        expect(res.body).toHaveLength(10);
+      });
+  });
+
+  it('GETs the top 10 users who have commented the most', async() => {
+    const agent = request.agent(app);
+
+    return agent
+      .get('/api/v1/auth/leader')
+      .then(res => {
+        expect(res.body).toContainEqual({
+          _id: expect.anything(),
+          username: expect.any(String),
+          numberOfComments: expect.any(Number)
+        });
+        expect(res.body).toHaveLength(10);
+      });
+  });
+
+  it('GETs the top 10 users with the highest average comments per post', async() => {
+    const agent = request.agent(app);
+
+    return agent
+      .get('/api/v1/auth/impact')
+      .then(res => {
+        expect(res.body).toContainEqual({
+          _id: expect.anything(),
+          username: expect.any(String),
+          averageCommentsPerPost: expect.any(Number)
+        });
+        expect(res.body).toHaveLength(10);
       });
   });
 });

@@ -1,10 +1,5 @@
 require('dotenv').config();
 
-const { MongoMemoryServer } = require('mongodb-memory-server');
-const mongod = new MongoMemoryServer();
-const mongoose = require('mongoose');
-const connect = require('../lib/utils/connect');
-
 const request = require('supertest');
 const app = require('../lib/app');
 const User = require('../lib/models/User');
@@ -121,7 +116,7 @@ describe('user routes', () => {
     const agent = request.agent(app);
 
     return agent
-      .get('/users/impact')
+      .get('/api/v1/auth/impact')
       .then(res => {
         expect(res.body).toContainEqual({
           _id: expect.anything(),

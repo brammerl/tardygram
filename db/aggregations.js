@@ -127,9 +127,66 @@ const biggestLeaderUsers = [{
   }
 }];
 
+const averageCommentsPerPost = [{
+  '$lookup': {
+    'from': 'posts', 
+    'localField': 'post', 
+    'foreignField': '_id', 
+    'as': 'postData'
+  }
+}, {
+  '$unwind': {
+    'path': '$postData'
+  }
+}, {
+  '$group': {
+    '_id': '$post', 
+    'totalCommentsOnPost': {
+      '$sum': 1
+    }, 
+    'postData': {
+      '$first': '$postData'
+    }
+  }
+}, {
+  '$group': {
+    '_id': '$postData.user', 
+    'averageCommentsPerPost': {
+      '$avg': '$totalCommentsOnPost'
+    }, 
+    'user': {
+      '$first': '$postData.user'
+    }
+  }
+}, {
+  '$sort': {
+    'averageCommentsPerPost': -1
+  }
+}, {
+  '$lookup': {
+    'from': 'users', 
+    'localField': 'user', 
+    'foreignField': '_id', 
+    'as': 'userData'
+  }
+}, {
+  '$unwind': {
+    'path': '$userData'
+  }
+}, {
+  '$project': {
+    '_id': '$_id', 
+    'averageCommentsPerPost': '$averageCommentsPerPost', 
+    'username': '$userData.username'
+  }
+}, {
+  '$limit': 10
+}];
+
 module.exports = {
   postsWithMostComments,
   mostPopularUsers,
   mostProlificUsers,
-  biggestLeaderUsers
+  biggestLeaderUsers,
+  averageCommentsPerPost
 };

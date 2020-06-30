@@ -63,7 +63,42 @@ const mostPopularUsers = [{
   }
 }];
 
+const mostProlificUsers = [
+  {
+    '$group': {
+      '_id': '$user', 
+      'totalPosts': {
+        '$sum': 1
+      }
+    }
+  }, {
+    '$sort': {
+      'totalPosts': -1
+    }
+  }, {
+    '$lookup': {
+      'from': 'users', 
+      'localField': '_id', 
+      'foreignField': '_id', 
+      'as': 'userData'
+    }
+  }, {
+    '$unwind': {
+      'path': '$userData'
+    }
+  }, {
+    '$project': {
+      '_id': '$_id', 
+      'username': '$userData.username', 
+      'totalPosts': '$totalPosts'
+    }
+  }, {
+    '$limit': 10
+  }
+];
+
 module.exports = {
   postsWithMostComments,
-  mostPopularUsers
+  mostPopularUsers,
+  mostProlificUsers
 };

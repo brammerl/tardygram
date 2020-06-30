@@ -91,7 +91,7 @@ describe('user routes', () => {
     const agent = request.agent(app);
 
     return agent
-      .get('/users/prolific')
+      .get('/api/v1/auth/prolific')
       .then(res => {
         expect(res.body).toContainEqual({
           _id: expect.anything(),
@@ -102,16 +102,16 @@ describe('user routes', () => {
       });
   });
 
-  it('GETs the top 10 users with the most comments', async() => {
+  it.only('GETs the top 10 users who have commented the most', async() => {
     const agent = request.agent(app);
 
     return agent
-      .get('/users/leader')
+      .get('/api/v1/auth/leader')
       .then(res => {
         expect(res.body).toContainEqual({
           _id: expect.anything(),
           username: expect.any(String),
-          commentsOnPosts: expect.any(Number)
+          numberOfComments: expect.any(Number)
         });
         expect(res.body).toHaveLength(10);
       });

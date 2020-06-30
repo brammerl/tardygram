@@ -84,4 +84,64 @@ describe('user routes', () => {
         });
       });
   });
+
+  it.only('GETs the top 10 users with the most comments on their posts', async() => {
+    const agent = request.agent(app);
+
+    return agent
+      .get('/users/popular')
+      .then(res => {
+        expect(res.body).toContainEqual({
+          _id: expect.anything(),
+          username: expect.any(String),
+          commentsOnPosts: expect.any(Number)
+        });
+        expect(res.body).toHaveLength(10);
+      });
+  });
+
+  it('GETs the top 10 users with the most posts', async() => {
+    const agent = request.agent(app);
+
+    return agent
+      .get('/users/prolific')
+      .then(res => {
+        expect(res.body).toContainEqual({
+          _id: expect.anything(),
+          username: expect.any(String),
+          commentsOnPosts: expect.any(Number)
+        });
+        expect(res.body).toHaveLength(10);
+      });
+  });
+
+  it('GETs the top 10 users with the most comments', async() => {
+    const agent = request.agent(app);
+
+    return agent
+      .get('/users/leader')
+      .then(res => {
+        expect(res.body).toContainEqual({
+          _id: expect.anything(),
+          username: expect.any(String),
+          commentsOnPosts: expect.any(Number)
+        });
+        expect(res.body).toHaveLength(10);
+      });
+  });
+
+  it('GETs the top 10 users with the most comments', async() => {
+    const agent = request.agent(app);
+
+    return agent
+      .get('/users/impact')
+      .then(res => {
+        expect(res.body).toContainEqual({
+          _id: expect.anything(),
+          username: expect.any(String),
+          commentsOnPosts: expect.any(Number)
+        });
+        expect(res.body).toHaveLength(10);
+      });
+  });
 });

@@ -66,7 +66,7 @@ describe('posts routes', () => {
       });
   });
 
-  it.only('gets the top 10 posts with the most comments', async() => {
+  it('gets the top 10 posts with the most comments', async() => {
     return agent
       .get('/api/v1/posts/popular')
       .then(res => {

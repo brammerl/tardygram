@@ -63,42 +63,73 @@ const mostPopularUsers = [{
   }
 }];
 
-const mostProlificUsers = [
-  {
-    '$group': {
-      '_id': '$user', 
-      'totalPosts': {
-        '$sum': 1
-      }
+const mostProlificUsers = [{
+  '$group': {
+    '_id': '$user', 
+    'totalPosts': {
+      '$sum': 1
     }
-  }, {
-    '$sort': {
-      'totalPosts': -1
-    }
-  }, {
-    '$lookup': {
-      'from': 'users', 
-      'localField': '_id', 
-      'foreignField': '_id', 
-      'as': 'userData'
-    }
-  }, {
-    '$unwind': {
-      'path': '$userData'
-    }
-  }, {
-    '$project': {
-      '_id': '$_id', 
-      'username': '$userData.username', 
-      'totalPosts': '$totalPosts'
-    }
-  }, {
-    '$limit': 10
   }
-];
+}, {
+  '$sort': {
+    'totalPosts': -1
+  }
+}, {
+  '$lookup': {
+    'from': 'users', 
+    'localField': '_id', 
+    'foreignField': '_id', 
+    'as': 'userData'
+  }
+}, {
+  '$unwind': {
+    'path': '$userData'
+  }
+}, {
+  '$project': {
+    '_id': '$_id', 
+    'username': '$userData.username', 
+    'totalPosts': '$totalPosts'
+  }
+}, {
+  '$limit': 10
+}];
+
+const biggestLeaderUsers = [{
+  '$group': {
+    '_id': '$commentBy', 
+    'numberOfComments': {
+      '$sum': 1
+    }
+  }
+}, {
+  '$sort': {
+    'numberOfComments': -1
+  }
+}, {
+  '$limit': 10
+}, {
+  '$lookup': {
+    'from': 'users', 
+    'localField': '_id', 
+    'foreignField': '_id', 
+    'as': 'userData'
+  }
+}, {
+  '$unwind': {
+    'path': '$userData'
+  }
+}, {
+  '$project': {
+    '_id': '$_id', 
+    'username': '$userData.username', 
+    'numberOfComments': '$numberOfComments'
+  }
+}];
 
 module.exports = {
   postsWithMostComments,
   mostPopularUsers,
-  mostProlificUsers
+  mostProlificUsers,
+  biggestLeaderUsers
 };

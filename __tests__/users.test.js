@@ -87,7 +87,7 @@ describe('user routes', () => {
       });
   });
 
-  it.only('GETs the top 10 users with the most posts', async() => {
+  it('GETs the top 10 users with the most posts', async() => {
     const agent = request.agent(app);
 
     return agent

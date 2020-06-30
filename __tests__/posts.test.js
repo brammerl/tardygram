@@ -49,24 +49,19 @@ describe('posts routes', () => {
   });
 
   it('updates a post via PATCH', async() => {
-    const user = prepare(await getLoggedInUser());
-
-    const newPost = {
-      photoUrl: chance.url(),
-      caption: chance.sentence(),
-      tags: ['spring', 'skateboarding', 'gaming', 'art']
-    };
+    const user = await getLoggedInUser();
+    const oldPost = prepare(await Post.findOne({ user: user._id }));
 
     return agent
-      .post('/api/v1/posts')
-      .send(newPost)
+      .patch(`/api/v1/posts/${oldPost._id}`)
+      .send({ caption: 'new caption' })
       .then(res => {
         expect(res.body).toEqual({
           _id: expect.anything(),
-          user: user._id,
-          photoUrl: newPost.photoUrl,
-          caption: newPost.caption,
-          tags: newPost.tags
+          user: user.id,
+          photoUrl: oldPost.photoUrl,
+          caption: 'new caption',
+          tags: oldPost.tags
         });
       });
   });

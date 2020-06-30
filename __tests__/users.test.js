@@ -102,7 +102,7 @@ describe('user routes', () => {
       });
   });
 
-  it.only('GETs the top 10 users who have commented the most', async() => {
+  it('GETs the top 10 users who have commented the most', async() => {
     const agent = request.agent(app);
 
     return agent
@@ -117,7 +117,7 @@ describe('user routes', () => {
       });
   });
 
-  it('GETs the top 10 users with the most comments', async() => {
+  it('GETs the top 10 users with the highest average comments per post', async() => {
     const agent = request.agent(app);
 
     return agent
@@ -126,7 +126,7 @@ describe('user routes', () => {
         expect(res.body).toContainEqual({
           _id: expect.anything(),
           username: expect.any(String),
-          commentsOnPosts: expect.any(Number)
+          averageCommentsPerPost: expect.any(Number)
         });
         expect(res.body).toHaveLength(10);
       });

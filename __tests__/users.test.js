@@ -7,8 +7,6 @@ const connect = require('../lib/utils/connect');
 
 const request = require('supertest');
 const app = require('../lib/app');
-const Comment = require('../lib/models/Comment');
-const Post = require('../lib/models/Post');
 const User = require('../lib/models/User');
 
 describe('user routes', () => {

@@ -65,4 +65,21 @@ describe('posts routes', () => {
         });
       });
   });
+
+  it('deletes a post via DELETE', async() => {
+    const user = await getLoggedInUser();
+    const oldPost = prepare(await Post.findOne({ user: user._id }));
+
+    return agent
+      .delete(`/api/v1/posts/${oldPost._id}`)
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: expect.anything(),
+          user: user.id,
+          photoUrl: oldPost.photoUrl,
+          caption: oldPost.caption,
+          tags: oldPost.tags
+        });
+      });
+  });
 });

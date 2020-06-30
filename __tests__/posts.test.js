@@ -50,19 +50,15 @@ describe('posts routes', () => {
 
   it('updates a post via PATCH', async() => {
     const user = await getLoggedInUser();
-
-    console.log(user._id);
-
-    const oldPost = await Post.find({ user: user._id });
-    console.log(oldPost);
+    const oldPost = prepare(await Post.findOne({ user: user._id }));
 
     return agent
-      .patch(`/api/v1/posts/${oldPost.id}`)
+      .patch(`/api/v1/posts/${oldPost._id}`)
       .send({ caption: 'new caption' })
       .then(res => {
         expect(res.body).toEqual({
           _id: expect.anything(),
-          user: user._id,
+          user: user.id,
           photoUrl: oldPost.photoUrl,
           caption: 'new caption',
           tags: oldPost.tags

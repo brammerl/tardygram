@@ -65,4 +65,16 @@ describe('posts routes', () => {
         });
       });
   });
+
+  it('gets the top 10 posts with the most comments', async() => {
+    return agent
+      .get('/api/v1/posts/popular')
+      .then(res => {
+        expect(res.body).toContainEqual({
+          _id: expect.anything(),
+          commentsOnPost: expect.any(Number)
+        });
+        expect(res.body).toHaveLength(10);
+      });
+  });
 });

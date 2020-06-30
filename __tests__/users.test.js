@@ -8,22 +8,9 @@ const connect = require('../lib/utils/connect');
 const request = require('supertest');
 const app = require('../lib/app');
 const User = require('../lib/models/User');
+require('../lib/data-helpers/data-helpers');
 
 describe('user routes', () => {
-  beforeAll(async() => {
-    const uri = await mongod.getUri();
-    return connect(uri);
-  });
-
-  beforeEach(() => {
-    return mongoose.connection.dropDatabase();
-  });
-
-  afterAll(async() => {
-    await mongoose.connection.close();
-    return mongod.stop();
-  });
-
   it('creates an user via POST', () => {
     return request(app)
       .post('/api/v1/auth/signup')
@@ -85,22 +72,22 @@ describe('user routes', () => {
       });
   });
 
-  it.only('GETs the top 10 users with the most comments on their posts', async() => {
+  it('GETs the top 10 users with the most comments on their posts', async() => {
     const agent = request.agent(app);
 
     return agent
-      .get('/users/popular')
+      .get('/api/v1/auth/popular')
       .then(res => {
         expect(res.body).toContainEqual({
           _id: expect.anything(),
           username: expect.any(String),
-          commentsOnPosts: expect.any(Number)
+          totalCommentsOnPosts: expect.any(Number)
         });
         expect(res.body).toHaveLength(10);
       });
   });
 
-  it('GETs the top 10 users with the most posts', async() => {
+  it.only('GETs the top 10 users with the most posts', async() => {
     const agent = request.agent(app);
 
     return agent
@@ -109,7 +96,7 @@ describe('user routes', () => {
         expect(res.body).toContainEqual({
           _id: expect.anything(),
           username: expect.any(String),
-          commentsOnPosts: expect.any(Number)
+          totalPosts: expect.any(Number)
         });
         expect(res.body).toHaveLength(10);
       });

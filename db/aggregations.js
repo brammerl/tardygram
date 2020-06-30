@@ -1,7 +1,3 @@
-module.exports = {
-  top10posts
-};
-
 const top10posts = [{
   '$group': {
     '_id': '$post', 
@@ -13,4 +9,11 @@ const top10posts = [{
   '$sort': {
     'commentsOnPost': -1
   }
+},
+{
+  '$limit': 10
 }];
+
+module.exports = {
+  top10posts
+};
